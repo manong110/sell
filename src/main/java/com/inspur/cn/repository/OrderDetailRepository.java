@@ -1,7 +1,11 @@
-//package com.inspur.cn.repository;
-//
-//import com.inspur.cn.repo.OrderDetail;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//
-//public interface OrderDetailRepository extends JpaRepository<OrderDetail, String> {
-//}
+package com.inspur.cn.repository;
+
+import com.inspur.cn.repo.OrderDetail;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface OrderDetailRepository extends JpaRepository<OrderDetail, String> {
+
+    List<OrderDetail> findByOrderId(String orderId);
+}

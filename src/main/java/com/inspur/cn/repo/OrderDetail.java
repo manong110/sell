@@ -1,29 +1,32 @@
-//package com.inspur.cn.repo;
-//
-//import lombok.Getter;
-//import lombok.NoArgsConstructor;
-//import lombok.Setter;
-//import lombok.ToString;
-//
-//import javax.persistence.Entity;
-//
-//@Setter
-//@Getter
-//@ToString
-//@Entity
-//@NoArgsConstructor
-//public class OrderDetail {
-//
-//    private String id;
-//
-//    private String orderId;
-//
-//    private String name;
-//
-//    private Double price;
-//
-//    private Integer total;
-//
-//    private String phone;
-//
-//}
+package com.inspur.cn.repo;
+
+import lombok.*;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.math.BigDecimal;
+
+/**
+ * 订单详情
+ */
+@Data
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderDetail {
+
+    @Id
+    private String id;
+
+    private String orderId; //订单id
+
+    private String name; //商品名称
+
+    private BigDecimal price;//商品价格
+
+    private Integer total;//商品数量
+
+    private String picture;//商品价格
+
+}
