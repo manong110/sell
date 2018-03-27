@@ -1,6 +1,7 @@
 package com.inspur.cn.common.dto;
 
 import com.inspur.cn.repo.OrderDetail;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@Builder
 public class OrderDto {
 
     private String id;
