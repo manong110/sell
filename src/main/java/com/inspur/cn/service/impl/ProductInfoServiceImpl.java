@@ -1,6 +1,8 @@
 package com.inspur.cn.service.impl;
 
+import com.inspur.cn.common.dto.CartDto;
 import com.inspur.cn.common.enums.Enums;
+import com.inspur.cn.common.exceptions.SellException;
 import com.inspur.cn.repo.ProductInfo;
 import com.inspur.cn.repository.ProductInfoRepository;
 import com.inspur.cn.service.ProductInfoService;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProductInfoServiceImpl implements ProductInfoService {
+public  class ProductInfoServiceImpl  implements ProductInfoService {
 
     @Autowired
     private ProductInfoRepository productInfoRepository;
@@ -24,11 +26,6 @@ public class ProductInfoServiceImpl implements ProductInfoService {
      */
     @Override
     public ProductInfo save(ProductInfo productInfo) {
-//        ProductInfo info =
-//                ProductInfo.builder().id(productInfo.getId()).pname(productInfo.getPname())
-//                        .price(productInfo.getPrice()).stock(productInfo.getStock()).type(productInfo.getType())
-//                        .picture(productInfo.getPicture()).productDesc(productInfo.getProductDesc())
-//                        .productStatus(productInfo.getProductStatus()).build();
         return productInfoRepository.save(productInfo);
     }
 
@@ -60,4 +57,42 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     public Page<ProductInfo> findAll(Pageable pageable) {
         return productInfoRepository.findAll(pageable);
     }
+
+    /**
+     * 加库存
+     * @param cartDtoList
+     */
+    @Override
+    public void increaseStock(List<CartDto> cartDtoList) {
+        for (CartDto cartDto :  cartDtoList) {
+            ProductInfo info = productInfoRepository.getOne(cartDto.getOrderId());
+            if( info == null ){
+                throw  new SellException(Enums.PRODUTC_NOT_EXIST);
+            }
+            info.setStock(info.getStock() + cartDto.getTotal());
+            productInfoRepository.save(info);
+        }
+    }
+
+    /**
+     * 扣库存
+     * @param cartDtoList
+     */
+    @Override
+    public void decreaseStork(List<CartDto> cartDtoList) {
+        for (CartDto cartDto :  cartDtoList) {
+            ProductInfo info = productInfoRepository.getOne(cartDto.getOrderId());
+            if( info == null  ){
+                throw  new SellException(Enums.PRODUTC_NOT_EXIST);
+            }
+            Integer result = info.getStock() - cartDto.getTotal();
+            if(result < 0){
+                throw new SellException(Enums.STOCK);
+            }
+            info.setStock(result);
+            productInfoRepository.save(info);
+        }
+    }
+
+
 }
