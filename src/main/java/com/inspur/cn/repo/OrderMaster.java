@@ -43,8 +43,8 @@ public class OrderMaster {
 
     private Date updateTime;//更新时间
 
-    @Transient
-    private List<OrderDetail> orderDetailList;
+//    @Transient
+//    private List<OrderDetail> orderDetailList;
 
 }
 
