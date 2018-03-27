@@ -1,4 +1,4 @@
-package com.inspur.cn.common.aspetaop;
+package com.inspur.cn.common.httpaspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
