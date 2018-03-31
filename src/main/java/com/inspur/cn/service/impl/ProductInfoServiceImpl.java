@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public  class ProductInfoServiceImpl  implements ProductInfoService {
@@ -35,8 +36,8 @@ public  class ProductInfoServiceImpl  implements ProductInfoService {
      * @return
      */
     @Override
-    public ProductInfo findOne(String id) {
-        return productInfoRepository.getOne(id);
+    public Optional<ProductInfo> findById(String id) {
+        return productInfoRepository.findById(id);
     }
 
     /**
@@ -54,7 +55,7 @@ public  class ProductInfoServiceImpl  implements ProductInfoService {
      * @return
      */
     @Override
-    public Page<ProductInfo> findAll(Pageable pageable) {
+    public Page<ProductInfo> findAllList(Pageable pageable) {
         return productInfoRepository.findAll(pageable);
     }
 
@@ -80,19 +81,19 @@ public  class ProductInfoServiceImpl  implements ProductInfoService {
      */
     @Override
     public void decreaseStork(List<CartDto> cartDtoList) {
-        for (CartDto cartDto :  cartDtoList) {
-            ProductInfo info = productInfoRepository.getOne(cartDto.getOrderId());
-            if( info == null  ){
-                throw  new SellException(Enums.PRODUTC_NOT_EXIST);
+        for (CartDto cartDto : cartDtoList) {
+            Optional<ProductInfo> optional = productInfoRepository.findById(cartDto.getOrderId());
+            ProductInfo info = optional.get();
+            if (info == null) {
+                throw new SellException(Enums.PRODUTC_NOT_EXIST);
             }
             Integer result = info.getStock() - cartDto.getTotal();
-            if(result < 0){
+            if (result < 0) {
                 throw new SellException(Enums.STOCK);
             }
             info.setStock(result);
             productInfoRepository.save(info);
         }
     }
-
 
 }

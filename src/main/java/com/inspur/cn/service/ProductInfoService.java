@@ -6,16 +6,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductInfoService {
 
     ProductInfo save(ProductInfo productInfo);
 
-    ProductInfo findOne(String id);
+    Optional<ProductInfo> findById(String id);
 
     List<ProductInfo> findUpAll();
 
-    Page<ProductInfo> findAll(Pageable pageable);
+    Page<ProductInfo> findAllList(Pageable pageable);
 
     //加库存
     void increaseStock(List<CartDto> cartDtoList);

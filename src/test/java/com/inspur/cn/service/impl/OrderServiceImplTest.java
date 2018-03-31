@@ -33,7 +33,7 @@ public class OrderServiceImplTest {
         orderDetails.add(build);
 
         orderDto.setOrderDetailList(orderDetails);
-        ResultDto result = orderService.createOrder(orderDto);
+        OrderDto result = orderService.createOrder(orderDto);
         log.info("result->{}",result.toString());
     }
 

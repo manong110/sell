@@ -2,8 +2,6 @@ package com.inspur.cn.service.impl;
 
 import com.inspur.cn.common.dto.CartDto;
 import com.inspur.cn.common.dto.OrderDto;
-import com.inspur.cn.common.dto.ResultDto;
-import com.inspur.cn.common.dto.ResultUtil;
 import com.inspur.cn.common.enums.Enums;
 import com.inspur.cn.common.exceptions.SellException;
 import com.inspur.cn.common.util.KeyUtil;
@@ -14,15 +12,21 @@ import com.inspur.cn.repository.OrderDetailRepository;
 import com.inspur.cn.repository.OrderMasterRepository;
 import com.inspur.cn.service.OrderService;
 import com.inspur.cn.service.ProductInfoService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +47,8 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Override
-    public ResultDto createOrder(OrderDto orderDto) {
+    @Transactional
+    public OrderDto createOrder(OrderDto orderDto) {
 
         //数量初始值
         BigDecimal bigDecimal = new BigDecimal(BigInteger.ZERO);
@@ -53,28 +58,31 @@ public class OrderServiceImpl implements OrderService {
         //查询商品数量和单价
         for(OrderDetail orderDetail : orderDto.getOrderDetailList()){
 
-            ProductInfo info = productInfoService.findOne(orderDetail.getOrderId());
+            Optional<ProductInfo> info = productInfoService.findById(orderDetail.getOrderId());
 
             if(info==null){
                 throw new SellException(Enums.PRODUTC_NOT_EXIST);
             }
             //计算价格
-            bigDecimal = info.getPrice().multiply(new BigDecimal(orderDetail.getTotal()))
+            bigDecimal = info.get().getPrice().multiply(new BigDecimal(orderDetail.getTotal()))
                     .add(bigDecimal);
 
-            //保存数据
+            //订单详情入库
+            ProductInfo productInfo = info.get();
+            BeanUtils.copyProperties(productInfo,orderDetail);
             orderDetail.setId(KeyUtil.getKeyValue());
-            orderDetail.setOrderId(orderId);
-            BeanUtils.copyProperties(info,orderDetail);
+            orderDetail.setName(productInfo.getPname());
             orderDetailRepository.save(orderDetail);
 
         }
 
         //写入订单数据库
         OrderMaster orderMaster = new OrderMaster();
+        BeanUtils.copyProperties(orderDto,orderMaster);
         orderMaster.setId(orderId);
         orderMaster.setOrderAmount(bigDecimal);
-        BeanUtils.copyProperties(orderDto,orderMaster);
+        orderMaster.setOrderStatus(Enums.NEW.getCode());
+        orderMaster.setPayStatus(Enums.WAIT.getCode());
         orderMasterRepository.save(orderMaster);
 
         //减库存
@@ -82,8 +90,9 @@ public class OrderServiceImpl implements OrderService {
         orderDto.getOrderDetailList().stream()
                 .map(e -> new CartDto(e.getOrderId(),e.getTotal()))
                 .collect(Collectors.toList());
+
         productInfoService.decreaseStork(cartDtoList);
-        return ResultUtil.success(orderDto);
+        return orderDto;
     }
 
     /**
@@ -93,7 +102,20 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public OrderDto findOrder(String orderId) {
-        return null;
+
+        Optional<OrderMaster> orderMaster = orderMasterRepository.findById(orderId);
+        OrderMaster master = orderMaster.get();
+        if(master == null){
+            throw new SellException(Enums.ORDER_MASTER);
+        }
+        List<OrderDetail> detailList = orderDetailRepository.findByOrderId(orderId);
+        if(CollectionUtils.isEmpty(detailList)){
+            throw new SellException(Enums.ORDER_DETAIL);
+        }
+        OrderDto orderDto = new OrderDto();
+        BeanUtils.copyProperties(master,orderDto);
+        orderDto.setOrderDetailList(detailList);
+        return orderDto;
     }
 
     /**
@@ -104,7 +126,8 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public Page<OrderMaster> findByOpenid(String openid, Pageable pageable) {
-        return null;
+        PageRequest request = PageRequest.of(0,30);
+        return orderMasterRepository.findByOpenid(openid, request);
     }
 
     /**
@@ -114,6 +137,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public OrderDto cancel(OrderDto orderDto) {
+
         return null;
     }
 

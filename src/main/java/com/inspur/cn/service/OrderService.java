@@ -1,7 +1,6 @@
 package com.inspur.cn.service;
 
 import com.inspur.cn.common.dto.OrderDto;
-import com.inspur.cn.common.dto.ResultDto;
 import com.inspur.cn.repo.OrderMaster;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 public interface OrderService {
 
     //创建订单
-    ResultDto createOrder(OrderDto orderDto);
+    OrderDto createOrder(OrderDto orderDto);
 
     //查询单个订单
     OrderDto  findOrder(String orderId);

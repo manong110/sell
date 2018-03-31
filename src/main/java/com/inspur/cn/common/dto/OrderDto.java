@@ -3,6 +3,7 @@ package com.inspur.cn.common.dto;
 import com.inspur.cn.repo.OrderDetail;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
 public class OrderDto {
 
     private String id;
