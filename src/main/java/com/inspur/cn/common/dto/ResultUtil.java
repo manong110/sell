@@ -7,7 +7,7 @@ public class ResultUtil extends ResultDto {
 
     public static ResultDto success(Object data){
         ResultDto resultDto = new ResultDto();
-        resultDto.setCode(1);
+        resultDto.setCode(0);
         resultDto.setMsg("成功");
         resultDto.setData(data);
         return resultDto;
