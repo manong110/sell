@@ -14,6 +14,7 @@ public enum Enums {
     CANCEL(2,"已取消"),
     WAIT(0,"等待"),
     SUCCESS(1,"支付成功"),
+    PARAM_ERROR(100,"参数错误"),
     PRODUTC_NOT_EXIST(101,"商品不存在"),
     STOCK(102,"库存不足"),
     ORDER_MASTER(103,"订单不存在"),
