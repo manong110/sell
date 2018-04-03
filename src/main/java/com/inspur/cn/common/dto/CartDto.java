@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class CartDto {
 
-    private String orderId; //订单id
+    private String productId; //商品id
 
     private Integer total;//商品数量
 
