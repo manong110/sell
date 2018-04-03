@@ -21,6 +21,8 @@ public class OrderDetail {
 
     private String orderId; //订单id
 
+    private String productId; //商品id
+
     private String name; //商品名称
 
     private BigDecimal price;//商品价格
