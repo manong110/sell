@@ -17,7 +17,10 @@ public enum Enums {
     PRODUTC_NOT_EXIST(101,"商品不存在"),
     STOCK(102,"库存不足"),
     ORDER_MASTER(103,"订单不存在"),
-    ORDER_DETAIL(103,"订单详细信息不存在")
+    ORDER_DETAIL(104,"订单详细信息不存在"),
+    ORDER_STATUS_ERROR(105,"订单状态不正确"),
+    ORDER_UPPDATE_ERROR(106,"订单更新失败"),
+    ORDER_XQ(107,"订单中无商品详情"),
     ;
 
     private Integer code;
