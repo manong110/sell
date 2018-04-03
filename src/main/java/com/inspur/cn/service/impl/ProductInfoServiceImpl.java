@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,9 +65,11 @@ public  class ProductInfoServiceImpl  implements ProductInfoService {
      * @param cartDtoList
      */
     @Override
+    @Transactional
     public void increaseStock(List<CartDto> cartDtoList) {
         for (CartDto cartDto :  cartDtoList) {
-            ProductInfo info = productInfoRepository.getOne(cartDto.getOrderId());
+            Optional<ProductInfo> infoOptional = productInfoRepository.findById(cartDto.getProductId());
+            ProductInfo info = infoOptional.get();
             if( info == null ){
                 throw  new SellException(Enums.PRODUTC_NOT_EXIST);
             }
@@ -80,9 +83,10 @@ public  class ProductInfoServiceImpl  implements ProductInfoService {
      * @param cartDtoList
      */
     @Override
+    @Transactional
     public void decreaseStork(List<CartDto> cartDtoList) {
         for (CartDto cartDto : cartDtoList) {
-            Optional<ProductInfo> optional = productInfoRepository.findById(cartDto.getOrderId());
+            Optional<ProductInfo> optional = productInfoRepository.findById(cartDto.getProductId());
             ProductInfo info = optional.get();
             if (info == null) {
                 throw new SellException(Enums.PRODUTC_NOT_EXIST);
