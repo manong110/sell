@@ -75,6 +75,7 @@ public class OrderServiceImpl implements OrderService {
             ProductInfo productInfo = info.get();
             BeanUtils.copyProperties(productInfo,orderDetail);
             orderDetail.setId(KeyUtil.getKeyValue());
+            orderDetail.setOrderId(orderId);
             orderDetail.setName(productInfo.getPname());
             orderDetailRepository.save(orderDetail);
 
@@ -82,8 +83,8 @@ public class OrderServiceImpl implements OrderService {
 
         //写入订单数据库
         OrderMaster orderMaster = new OrderMaster();
+        orderDto.setId(orderId);
         BeanUtils.copyProperties(orderDto,orderMaster);
-        orderMaster.setId(orderId);
         orderMaster.setOrderAmount(bigDecimal);
         orderMaster.setOrderStatus(Enums.NEW.getCode());
         orderMaster.setPayStatus(Enums.WAIT.getCode());
