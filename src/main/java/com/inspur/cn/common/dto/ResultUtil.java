@@ -14,7 +14,10 @@ public class ResultUtil extends ResultDto {
     }
 
     public static ResultDto success(){
-        return null;
+        ResultDto resultDto = new ResultDto();
+        resultDto.setCode(0);
+        resultDto.setMsg("成功");
+        return resultDto;
     }
 
     public static ResultDto error(Integer code,String msg){
