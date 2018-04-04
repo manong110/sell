@@ -22,6 +22,7 @@ public enum Enums {
     ORDER_STATUS_ERROR(105,"订单状态不正确"),
     ORDER_UPPDATE_ERROR(106,"订单更新失败"),
     ORDER_XQ(107,"订单中无商品详情"),
+    ORDER_OPENID_ERROR(108,"该订单不属于当前用户"),
     ;
 
     private Integer code;
