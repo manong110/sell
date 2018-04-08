@@ -22,3 +22,12 @@ server:
   port: 8080
   servlet:
     context-path: /sell
+
+
+wechat:
+  mpAppId:
+  mpAppSecret:
+  mchId:
+  mchKey:
+  keyPath:
+  notifyUrl:
