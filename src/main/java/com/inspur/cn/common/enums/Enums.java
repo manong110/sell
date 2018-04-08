@@ -26,7 +26,8 @@ public enum Enums {
     WX_MP_ERROR(109,"微信公众账号错误"),
     URL_ENCODE_ERROR(110,"路径编码异常"),
     ORDER_PAY_START_ERROR(111,"订单支付状态错误"),
-    ORDER_PAY_ERROR(112,"订单支付失败")
+    ORDER_PAY_ERROR(112,"订单支付失败"),
+    ORDER_AMOUNT_ERROR(113,"订单金额不一致"),
     ;
 
     private Integer code;

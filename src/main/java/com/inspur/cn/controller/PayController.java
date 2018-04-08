@@ -28,6 +28,13 @@ public class PayController {
     @Autowired
     private PayService payService;
 
+    /**
+     * 微信创建订单
+     * @param orderId
+     * @param resultUrl
+     * @param map
+     * @return
+     */
     @GetMapping("/create")
     public ModelAndView create(@RequestParam("orderId") String orderId,
                                @RequestParam("resultUrl")String resultUrl,
@@ -44,13 +51,14 @@ public class PayController {
     }
 
     /**
-     *
+     * 微信异步通知
      * @param notifyData
      */
     @PostMapping("/notify")
     @ResponseBody
-    public void notify(String notifyData){
+    public ModelAndView notify(String notifyData){
         payService.notify(notifyData);
+        return new ModelAndView("/pay/success");//通知微信支付成功
     }
 
 }
