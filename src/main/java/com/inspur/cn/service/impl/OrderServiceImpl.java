@@ -6,6 +6,7 @@ import com.inspur.cn.common.dto.OrderDto;
 import com.inspur.cn.common.enums.Enums;
 import com.inspur.cn.common.exceptions.SellException;
 import com.inspur.cn.common.util.KeyUtil;
+import com.inspur.cn.common.util.jsonUtil;
 import com.inspur.cn.repo.OrderDetail;
 import com.inspur.cn.repo.OrderMaster;
 import com.inspur.cn.repo.ProductInfo;
@@ -13,6 +14,7 @@ import com.inspur.cn.repository.OrderDetailRepository;
 import com.inspur.cn.repository.OrderMasterRepository;
 import com.inspur.cn.service.OrderService;
 import com.inspur.cn.service.ProductInfoService;
+import com.lly835.bestpay.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -195,6 +197,24 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public OrderDto paid(OrderDto orderDto) {
-        return null;
+        //判断订单状态
+        if(!Enums.NEW.getCode().equals(orderDto.getOrderStatus())){
+            log.error("[支付订单完成] 订单状态不正确, orderId->{},orderStatus->{}",orderDto.getId(),orderDto.getOrderStatus());
+            throw new SellException(Enums.ORDER_STATUS_ERROR);
+        }
+        //判断支付状态
+        if(!orderDto.getPayStatus().equals(Enums.WAIT.getCode())){
+            log.error("[支付订单完成] 订单状态不正确, orderDto->{}", JsonUtil.toJson(orderDto));
+            throw new SellException(Enums.ORDER_PAY_START_ERROR);
+        }
+        orderDto.setPayStatus(Enums.SUCCESS.getCode());
+        OrderMaster orderMaster = new OrderMaster();
+        BeanUtils.copyProperties(orderDto,orderMaster);
+        OrderMaster master = orderMasterRepository.save(orderMaster);
+        if(master==null){
+            log.error("[支付订单失败] master->{}",jsonUtil.tojson(master));
+            throw new SellException(Enums.ORDER_PAY_ERROR);
+        }
+        return orderDto;
     }
 }
