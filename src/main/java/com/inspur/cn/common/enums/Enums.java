@@ -23,6 +23,10 @@ public enum Enums {
     ORDER_UPPDATE_ERROR(106,"订单更新失败"),
     ORDER_XQ(107,"订单中无商品详情"),
     ORDER_OPENID_ERROR(108,"该订单不属于当前用户"),
+    WX_MP_ERROR(109,"微信公众账号错误"),
+    URL_ENCODE_ERROR(110,"路径编码异常"),
+    ORDER_PAY_START_ERROR(111,"订单支付状态错误"),
+    ORDER_PAY_ERROR(112,"订单支付失败")
     ;
 
     private Integer code;
